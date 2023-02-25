@@ -1,18 +1,23 @@
 package site.sammati_hospital.controller;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import site.sammati_hospital.Service.DoctorLoginService;
 import site.sammati_hospital.dto.ConsentRequest;
+import site.sammati_hospital.dto.Credentials;
+import site.sammati_hospital.entity.Doctor;
 
 import java.util.List;
 
 @RestController
 public class HospitalController {
+
+    @Autowired
+    private DoctorLoginService doctorLoginService;
 
     @PostMapping("/consent_request")
     public Integer generateConsentRequest(@RequestBody ConsentRequest consentRequest){
@@ -28,12 +33,20 @@ public class HospitalController {
         return response.getBody();
     }
 
-    @GetMapping("/get_status/{pid}/{did}/{hid}")
-    public List<Object> getConsentRequestStatus(@PathVariable("pid") Integer patientId, @PathVariable("did") Integer doctorId, @PathVariable("hid") Integer hospitalId){
+    @GetMapping("/get_status")
+    public List<Object> getConsentRequestStatus(@RequestParam("pId") Integer patientId, @RequestParam("dId") Integer doctorId, @RequestParam("hId") Integer hospitalId){
         String uri = "http://172.16.133.184:6969/get_status/"+patientId+"/"+doctorId+"/"+hospitalId;
         //IP of Sammati server/API call
         RestTemplate restTemplate = new RestTemplate();
         List<Object> result = restTemplate.getForObject(uri, List.class);
         return result;
+    }
+
+
+    @PostMapping("/login")
+    public Doctor DoctorLogin(@RequestBody Credentials credentials)
+    {
+        Doctor doctor=doctorLoginService.loginDoctor(credentials);
+        return doctor;
     }
 }
