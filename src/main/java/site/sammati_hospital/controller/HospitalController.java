@@ -42,6 +42,14 @@ public class HospitalController {
         return result;
     }
 
+    @GetMapping("/get_status_all")
+    public List<Object> getConsentRequestStatusAll(@RequestParam("dId") Integer doctorId, @RequestParam("hId") Integer hospitalId){
+        String uri = "http://172.16.133.184:6969/get_status_all/"+doctorId+"/"+hospitalId;
+        //IP of Sammati server/API call
+        RestTemplate restTemplate = new RestTemplate();
+        List<Object> result = restTemplate.getForObject(uri, List.class);
+        return result;
+    }
 
     @PostMapping("/login")
     public Doctor DoctorLogin(@RequestBody Credentials credentials)
