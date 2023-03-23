@@ -15,4 +15,3 @@ public interface HospitalRepository extends JpaRepository<Doctor, Integer>
     Doctor findByDoctorId(Integer doctorId);
 }
 
-
