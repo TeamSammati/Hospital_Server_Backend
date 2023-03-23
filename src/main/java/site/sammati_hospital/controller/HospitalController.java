@@ -57,4 +57,9 @@ public class HospitalController {
         Doctor doctor=doctorLoginService.loginDoctor(credentials);
         return doctor;
     }
+
+    @PostMapping("/addepisode")
+    public void addEpisode(@RequestParam("patientId") Integer patientId,@RequestParam("episodetype") String episodeType){
+        doctorLoginService.createEpisode(patientId,episodeType);
+    }
 }

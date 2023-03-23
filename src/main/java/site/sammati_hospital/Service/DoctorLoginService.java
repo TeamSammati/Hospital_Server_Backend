@@ -8,4 +8,6 @@ import site.sammati_hospital.entity.Doctor;
 @Component
 public interface DoctorLoginService {
     Doctor loginDoctor(Credentials credentials);
+
+    public void createEpisode(Integer patientId, String episodeType);
 }
