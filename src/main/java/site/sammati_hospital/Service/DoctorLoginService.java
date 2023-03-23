@@ -10,4 +10,7 @@ public interface DoctorLoginService {
     Doctor loginDoctor(Credentials credentials);
 
     public void createEpisode(Integer patientId, String episodeType);
+
+    public void createVisit(Integer patientId,Integer episodeId,Integer doctorId);
+
 }

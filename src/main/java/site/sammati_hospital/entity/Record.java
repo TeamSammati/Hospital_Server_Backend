@@ -17,8 +17,9 @@ public class Record {
     @Column(nullable = false)
     private Integer patientId;
 
-    @Column(nullable = false)
-    private Integer doctorId;
+    @ManyToOne
+    @JoinColumn(name="doctorId",nullable = false)
+    private Doctor doctor;
 
     @ManyToOne
     @JoinColumn(name="visitId",nullable = false)

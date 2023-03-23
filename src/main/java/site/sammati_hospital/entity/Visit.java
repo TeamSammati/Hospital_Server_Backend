@@ -27,8 +27,9 @@ public class Visit {
     @JoinColumn(name="episodeId",nullable = false)
     private Episode episode;
 
-    @Column(nullable = false)
-    private Date doctorId;
+    @ManyToOne
+    @JoinColumn(name="doctorId",nullable = false)
+    private Doctor doctor;
 
     @Column(nullable = false)
     private Date visit_date;
