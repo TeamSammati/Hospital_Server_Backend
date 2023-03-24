@@ -10,6 +10,7 @@ import site.sammati_hospital.entity.Episode;
 import site.sammati_hospital.entity.Visit;
 import site.sammati_hospital.repository.HospitalRepository;
 import site.sammati_hospital.repository.EpisodeRepository;
+import site.sammati_hospital.repository.VisitRepository;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -55,5 +56,22 @@ public class DoctorLoginServiceImpl implements DoctorLoginService{
                 .episode_type(episodeType)
                 .build();
         episodeRepository.save(episode);
+    }
+
+    @Autowired
+    private VisitRepository visitRepository;
+    public void createVisit(Integer patientId, Integer episodeId,Integer doctorId){
+        Date date = Date.valueOf(LocalDate.now());
+
+        Episode episode=episodeRepository.findByEpisodeId(episodeId);
+        Doctor doctor=hospitalRepository.findByDoctorId(doctorId);
+
+        Visit visit=Visit.builder()
+                .patientId(patientId)
+                .episode(episode)
+                .visit_date(date)
+                .doctor(doctor)
+                .build();
+        visitRepository.save(visit);
     }
 }

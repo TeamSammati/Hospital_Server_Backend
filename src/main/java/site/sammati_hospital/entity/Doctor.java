@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -32,5 +33,10 @@ public class Doctor
 
     @Column(nullable = false)
     private Integer patientId;
+
+    @OneToMany(mappedBy = "doctor")
+    private List<Visit> visits;
+    @OneToMany(mappedBy = "doctor")
+    private List<Record> record;
 }
 

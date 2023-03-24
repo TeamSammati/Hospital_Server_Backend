@@ -62,4 +62,9 @@ public class HospitalController {
     public void addEpisode(@RequestParam("patientId") Integer patientId,@RequestParam("episodetype") String episodeType){
         doctorLoginService.createEpisode(patientId,episodeType);
     }
+
+    @PostMapping("/addvisit")
+    public void addVisit(@RequestParam("patientId") Integer patientId, @RequestParam("episodeId") Integer episodeId,@RequestParam("doctorId") Integer doctorId){
+        doctorLoginService.createVisit(patientId,episodeId,doctorId);
+    }
 }

@@ -4,8 +4,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import site.sammati_hospital.entity.Episode;
 
+import java.util.Optional;
+
 
 @Repository
 public interface EpisodeRepository extends JpaRepository<Episode, Integer> {
 
+    Episode findByEpisodeId(Integer episodeId);
 }
