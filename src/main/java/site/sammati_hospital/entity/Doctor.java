@@ -1,5 +1,6 @@
 package site.sammati_hospital.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -34,9 +35,11 @@ public class Doctor
     @Column(nullable = false)
     private Integer patientId;
 
-    @OneToMany(mappedBy = "doctor")
+    @OneToMany(mappedBy = "doctor",fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Visit> visits;
-    @OneToMany(mappedBy = "doctor")
+    @OneToMany(mappedBy = "doctor",fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Record> record;
 }
 

@@ -1,5 +1,6 @@
 package site.sammati_hospital.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,6 +30,7 @@ public class Episode {
     @Column(nullable = false)
     private String episode_type;
 
-    @OneToMany(mappedBy = "episode")
+    @OneToMany(mappedBy = "episode",fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Visit> visits;
 }
