@@ -4,13 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import site.sammati_hospital.dto.Credentials;
-import site.sammati_hospital.dto.LoginResponse;
-import site.sammati_hospital.entity.Doctor;
-import site.sammati_hospital.entity.Episode;
-import site.sammati_hospital.entity.Visit;
-import site.sammati_hospital.repository.HospitalRepository;
-import site.sammati_hospital.repository.EpisodeRepository;
-import site.sammati_hospital.repository.VisitRepository;
+import site.sammati_hospital.dto.PrescriptionDto;
+import site.sammati_hospital.dto.RecordDto;
+import site.sammati_hospital.entity.*;
+import site.sammati_hospital.entity.Record;
+import site.sammati_hospital.repository.*;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -47,7 +45,7 @@ public class DoctorLoginServiceImpl implements DoctorLoginService{
 
     @Autowired
     private EpisodeRepository episodeRepository;
-    public void createEpisode(Integer patientId, String episodeType){
+    public Integer createEpisode(Integer patientId, String episodeType){
         Date date = Date.valueOf(LocalDate.now());
 
         Episode episode=Episode.builder()
@@ -55,12 +53,13 @@ public class DoctorLoginServiceImpl implements DoctorLoginService{
                 .start_date(date)
                 .episode_type(episodeType)
                 .build();
-        episodeRepository.save(episode);
+        return episodeRepository.save(episode).getEpisodeId();
+
     }
 
     @Autowired
     private VisitRepository visitRepository;
-    public void createVisit(Integer patientId, Integer episodeId,Integer doctorId){
+    public Integer createVisit(Integer patientId, Integer episodeId,Integer doctorId){
         Date date = Date.valueOf(LocalDate.now());
 
         Episode episode=episodeRepository.findByEpisodeId(episodeId);
@@ -72,6 +71,43 @@ public class DoctorLoginServiceImpl implements DoctorLoginService{
                 .visit_date(date)
                 .doctor(doctor)
                 .build();
-        visitRepository.save(visit);
+        return visitRepository.save(visit).getVisitId();
     }
+
+    @Autowired
+    private RecordRepository recordRepository;
+    public Integer addRecord(RecordDto recordDto){
+
+        Visit visit=visitRepository.findByVisitId(recordDto.getVisitId());
+        Doctor doctor=hospitalRepository.findByDoctorId(recordDto.getDoctorId());
+
+        Record record1= Record.builder()
+                .patientId(recordDto.getPatientId())
+                .problem(recordDto.getProblem())
+                .treatment(recordDto.getTreatment())
+                .doctor(doctor)
+                .visit(visit)
+                .build();
+        return recordRepository.save(record1).getRecordId();
+
+//        addPrescription(record);
+    }
+
+    @Autowired
+    private PrescriptionRepository prescriptionRepository;
+    public void addPrescription(PrescriptionDto prescriptionDto){
+
+        Record record=recordRepository.findByRecordId(prescriptionDto.getRecordId());
+        Prescription prescription= Prescription.builder()
+                .record(record)
+                .medicine(prescriptionDto.getMedicine())
+                .dosage(prescriptionDto.getDosage())
+                .dosage_timing(prescriptionDto.getDosage_timing())
+                .build();
+        prescriptionRepository.save(prescription);
+
+
+    }
+
+
 }

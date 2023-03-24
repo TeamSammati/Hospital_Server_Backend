@@ -9,7 +9,10 @@ import org.springframework.web.client.RestTemplate;
 import site.sammati_hospital.Service.DoctorLoginService;
 import site.sammati_hospital.dto.ConsentRequest;
 import site.sammati_hospital.dto.Credentials;
+import site.sammati_hospital.dto.PrescriptionDto;
+import site.sammati_hospital.dto.RecPreDto;
 import site.sammati_hospital.entity.Doctor;
+import site.sammati_hospital.entity.Record;
 
 import java.util.List;
 
@@ -59,12 +62,27 @@ public class HospitalController {
     }
 
     @PostMapping("/addepisode")
-    public void addEpisode(@RequestParam("patientId") Integer patientId,@RequestParam("episodetype") String episodeType){
-        doctorLoginService.createEpisode(patientId,episodeType);
+    public Integer addEpisode(@RequestParam("patientId") Integer patientId,@RequestParam("episodetype") String episodeType){
+        return doctorLoginService.createEpisode(patientId,episodeType);
     }
 
     @PostMapping("/addvisit")
-    public void addVisit(@RequestParam("patientId") Integer patientId, @RequestParam("episodeId") Integer episodeId,@RequestParam("doctorId") Integer doctorId){
-        doctorLoginService.createVisit(patientId,episodeId,doctorId);
+    public Integer addVisit(@RequestParam("patientId") Integer patientId, @RequestParam("episodeId") Integer episodeId,@RequestParam("doctorId") Integer doctorId){
+        return doctorLoginService.createVisit(patientId,episodeId,doctorId);
+    }
+
+
+    @PostMapping("/addrecord")
+    public Integer addRecord(@RequestBody RecPreDto recordDto){
+
+//        System.out.println(record);
+
+        Integer recordId= doctorLoginService.addRecord(recordDto.getRecordDto());
+        for (PrescriptionDto prescriptionDto:recordDto.getPrescriptionDtos()) {
+            prescriptionDto.setRecordId(recordId);
+            doctorLoginService.addPrescription(prescriptionDto);
+        }
+//        doctorLoginService.addRecord(record);
+        return recordId;
     }
 }

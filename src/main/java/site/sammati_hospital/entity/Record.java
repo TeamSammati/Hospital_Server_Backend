@@ -2,14 +2,18 @@ package site.sammati_hospital.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Builder
 public class Record {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,6 +34,7 @@ public class Record {
 
     @Column(nullable = false)
     private String treatment;
-    @Column(nullable = false)
-    private Integer prescriptionId;
+
+    @OneToMany(mappedBy = "record")
+    private List<Prescription> prescriptions;
 }
