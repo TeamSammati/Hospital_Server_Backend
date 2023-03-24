@@ -5,4 +5,6 @@ import site.sammati_hospital.entity.Episode;
 import site.sammati_hospital.entity.Visit;
 
 public interface VisitRepository extends JpaRepository<Visit, Integer> {
+
+    Visit findByVisitId(Integer visitId);
 }
