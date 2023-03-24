@@ -1,12 +1,12 @@
 package site.sammati_hospital.Service;
 
 import org.springframework.stereotype.Component;
-import site.sammati_hospital.dto.Credentials;
-import site.sammati_hospital.dto.LoginResponse;
-import site.sammati_hospital.dto.PrescriptionDto;
-import site.sammati_hospital.dto.RecordDto;
+import site.sammati_hospital.dto.*;
 import site.sammati_hospital.entity.Doctor;
 import site.sammati_hospital.entity.Record;
+import site.sammati_hospital.utils.enums.ReqType;
+
+import java.util.List;
 
 @Component
 public interface DoctorLoginService {
@@ -20,4 +20,5 @@ public interface DoctorLoginService {
 
     public void addPrescription(PrescriptionDto prescriptionDto);
 
+    List<RecPreDto2> findRecordsByPatientId(Integer patientId, Integer reqType);
 }

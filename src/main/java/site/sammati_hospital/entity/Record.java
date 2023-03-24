@@ -1,5 +1,6 @@
 package site.sammati_hospital.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,6 +36,7 @@ public class Record {
     @Column(nullable = false)
     private String treatment;
 
-    @OneToMany(mappedBy = "record")
+    @OneToMany(mappedBy = "record",fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Prescription> prescriptions;
 }

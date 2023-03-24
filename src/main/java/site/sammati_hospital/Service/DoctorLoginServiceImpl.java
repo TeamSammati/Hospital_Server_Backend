@@ -3,15 +3,16 @@ package site.sammati_hospital.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import site.sammati_hospital.dto.Credentials;
-import site.sammati_hospital.dto.PrescriptionDto;
-import site.sammati_hospital.dto.RecordDto;
+import site.sammati_hospital.dto.*;
 import site.sammati_hospital.entity.*;
 import site.sammati_hospital.entity.Record;
 import site.sammati_hospital.repository.*;
+import site.sammati_hospital.utils.enums.ReqType;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class DoctorLoginServiceImpl implements DoctorLoginService{
@@ -107,6 +108,20 @@ public class DoctorLoginServiceImpl implements DoctorLoginService{
         prescriptionRepository.save(prescription);
 
 
+    }
+
+
+    @Override
+    public List<RecPreDto2> findRecordsByPatientId(Integer patientId, Integer reqType) {
+        List<RecPreDto2> records=new ArrayList<>();
+        if(reqType==0){
+            List<Record> recordList=recordRepository.findAllByPatientId(patientId);
+            for(Record record:recordList){
+                List<Prescription> prescriptions=prescriptionRepository.findAllByRecordId(record.getRecordId());
+                records.add(new RecPreDto2(record,prescriptions));
+            }
+        }
+        return records;
     }
 
 

@@ -7,11 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import site.sammati_hospital.Service.DoctorLoginService;
-import site.sammati_hospital.dto.ConsentRequest;
-import site.sammati_hospital.dto.Credentials;
-import site.sammati_hospital.dto.PrescriptionDto;
-import site.sammati_hospital.dto.RecPreDto;
+import site.sammati_hospital.dto.*;
 import site.sammati_hospital.entity.Doctor;
+import site.sammati_hospital.entity.Record;
+import site.sammati_hospital.utils.enums.ReqType;
 import site.sammati_hospital.entity.Record;
 
 import java.util.List;
@@ -84,5 +83,11 @@ public class HospitalController {
         }
 //        doctorLoginService.addRecord(record);
         return recordId;
+    }
+
+
+    @GetMapping("/send_records/{pid}/{reqType}")
+    public List<RecPreDto2> sendRecords(@PathVariable("pid") Integer patientId, @PathVariable("reqType")Integer reqType){
+        return doctorLoginService.findRecordsByPatientId(patientId,reqType);
     }
 }
