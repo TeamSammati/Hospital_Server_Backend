@@ -6,12 +6,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-import site.sammati_hospital.Service.DoctorLoginService;
+import site.sammati_hospital.service.DoctorLoginService;
 import site.sammati_hospital.dto.*;
 import site.sammati_hospital.entity.Doctor;
-import site.sammati_hospital.entity.Record;
-import site.sammati_hospital.utils.enums.ReqType;
-import site.sammati_hospital.entity.Record;
 
 import java.util.List;
 
@@ -89,5 +86,14 @@ public class HospitalController {
     @GetMapping("/send_records/{pid}/{reqType}")
     public List<RecPreDto2> sendRecords(@PathVariable("pid") Integer patientId, @PathVariable("reqType")Integer reqType){
         return doctorLoginService.findRecordsByPatientId(patientId,reqType);
+    }
+
+    @GetMapping("/patient_existIn_hospital")
+    public Boolean checkPatientExistInHospital(@RequestParam("patientId") Integer patientId ) {
+        String uri = "http://172.16.131.147:6979/patient_existIn_hospital/" + patientId;
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<Boolean> response = restTemplate.getForEntity(uri, Boolean.class);
+        System.out.println(response.getBody());
+        return response.getBody();
     }
 }

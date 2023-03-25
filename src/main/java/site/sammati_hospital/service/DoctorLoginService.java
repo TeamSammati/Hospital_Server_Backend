@@ -1,10 +1,8 @@
-package site.sammati_hospital.Service;
+package site.sammati_hospital.service;
 
 import org.springframework.stereotype.Component;
 import site.sammati_hospital.dto.*;
 import site.sammati_hospital.entity.Doctor;
-import site.sammati_hospital.entity.Record;
-import site.sammati_hospital.utils.enums.ReqType;
 
 import java.util.List;
 
