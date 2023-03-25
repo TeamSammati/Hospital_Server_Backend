@@ -13,5 +13,7 @@ public interface HospitalRepository extends JpaRepository<Doctor, Integer>
 {
     Optional<Doctor> findOneByDoctorIdAndPassword(Integer doctorId, String password);
     Doctor findByDoctorId(Integer doctorId);
+
+    Optional<Doctor> findByEmail(String email);
 }
 

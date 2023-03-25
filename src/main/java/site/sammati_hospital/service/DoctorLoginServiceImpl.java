@@ -1,4 +1,4 @@
-package site.sammati_hospital.Service;
+package site.sammati_hospital.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -7,7 +7,6 @@ import site.sammati_hospital.dto.*;
 import site.sammati_hospital.entity.*;
 import site.sammati_hospital.entity.Record;
 import site.sammati_hospital.repository.*;
-import site.sammati_hospital.utils.enums.ReqType;
 
 import java.sql.Date;
 import java.time.LocalDate;
