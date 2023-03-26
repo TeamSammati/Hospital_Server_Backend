@@ -111,16 +111,18 @@ public class DoctorLoginServiceImpl implements DoctorLoginService{
 
 
     @Override
-    public List<RecPreDto2> findRecordsByPatientId(Integer patientId, Integer reqType) {
+    public List<Prescription> findRecordsByPatientId(Integer patientId, Integer reqType) {
         List<RecPreDto2> records=new ArrayList<>();
+        List<Prescription> prescriptionsList=new ArrayList<>();
         if(reqType==0){
             List<Record> recordList=recordRepository.findAllByPatientId(patientId);
             for(Record record:recordList){
                 List<Prescription> prescriptions=prescriptionRepository.findAllByRecordId(record.getRecordId());
                 records.add(new RecPreDto2(record,prescriptions));
+                prescriptionsList.addAll(prescriptions);
             }
         }
-        return records;
+        return prescriptionsList;
     }
 
 

@@ -3,6 +3,7 @@ package site.sammati_hospital.service;
 import org.springframework.stereotype.Component;
 import site.sammati_hospital.dto.*;
 import site.sammati_hospital.entity.Doctor;
+import site.sammati_hospital.entity.Prescription;
 
 import java.util.List;
 
@@ -18,5 +19,5 @@ public interface DoctorLoginService {
 
     public void addPrescription(PrescriptionDto prescriptionDto);
 
-    List<RecPreDto2> findRecordsByPatientId(Integer patientId, Integer reqType);
+    List<Prescription> findRecordsByPatientId(Integer patientId, Integer reqType);
 }

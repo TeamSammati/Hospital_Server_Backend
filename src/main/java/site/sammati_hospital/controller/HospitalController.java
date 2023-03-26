@@ -9,6 +9,10 @@ import org.springframework.web.client.RestTemplate;
 import site.sammati_hospital.service.DoctorLoginService;
 import site.sammati_hospital.dto.*;
 import site.sammati_hospital.entity.Doctor;
+import site.sammati_hospital.entity.Prescription;
+import site.sammati_hospital.entity.Record;
+import site.sammati_hospital.utils.enums.ReqType;
+import site.sammati_hospital.entity.Record;
 
 import java.util.List;
 
@@ -87,6 +91,10 @@ public class HospitalController {
 //    public List<RecPreDto2> sendRecords(@PathVariable("pid") Integer patientId, @PathVariable("reqType")Integer reqType){
 //        return doctorLoginService.findRecordsByPatientId(patientId,reqType);
 //    }
+    @GetMapping("/send_records/{pid}/{reqType}")
+    public List<Prescription>  sendRecords(@PathVariable("pid") Integer patientId, @PathVariable("reqType")Integer reqType){
+        return doctorLoginService.findRecordsByPatientId(patientId,reqType);
+    }
 
     @GetMapping("/patient_existIn_hospital")
     public Boolean checkPatientExistInHospital(@RequestParam("patientId") Integer patientId ) {
