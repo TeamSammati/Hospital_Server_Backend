@@ -125,5 +125,10 @@ public class DoctorLoginServiceImpl implements DoctorLoginService{
         return prescriptionsList;
     }
 
+    @Override
+    public Doctor findDoctorByEmail(String email) {
+        return hospitalRepository.findByEmail(email).get();
+    }
+
 
 }

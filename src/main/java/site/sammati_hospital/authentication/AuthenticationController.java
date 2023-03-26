@@ -10,6 +10,7 @@ import org.springframework.web.client.RestTemplate;
 import site.sammati_hospital.dto.PatientDoctorMapping;
 import site.sammati_hospital.dto.PatientDto;
 import site.sammati_hospital.dto.RecPreDto2;
+import site.sammati_hospital.entity.Doctor;
 import site.sammati_hospital.entity.Prescription;
 import site.sammati_hospital.service.DoctorLoginService;
 
@@ -31,7 +32,12 @@ public class AuthenticationController
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request
     ) {
-        return ResponseEntity.ok(service.authenticate(request));
+        Doctor doctor=doctorLoginService.findDoctorByEmail(request.getEmail());
+        AuthenticationResponse authenticationResponse=AuthenticationResponse.builder()
+                .doctor(doctor)
+                .token(service.authenticate(request).getToken())
+                .build();
+        return ResponseEntity.ok(authenticationResponse);
     }
 
     @PostMapping("/register_new_patient")
