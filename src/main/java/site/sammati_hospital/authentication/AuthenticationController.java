@@ -10,6 +10,7 @@ import org.springframework.web.client.RestTemplate;
 import site.sammati_hospital.dto.PatientDoctorMapping;
 import site.sammati_hospital.dto.PatientDto;
 import site.sammati_hospital.dto.RecPreDto2;
+import site.sammati_hospital.entity.Prescription;
 import site.sammati_hospital.service.DoctorLoginService;
 
 import java.util.List;
@@ -58,7 +59,7 @@ public class AuthenticationController
     }
 
     @GetMapping("/send_records/{pid}/{reqType}")
-    public List<RecPreDto2> sendRecords(@PathVariable("pid") Integer patientId, @PathVariable("reqType")Integer reqType){
+    public List<Prescription> sendRecords(@PathVariable("pid") Integer patientId, @PathVariable("reqType")Integer reqType){
         return doctorLoginService.findRecordsByPatientId(patientId,reqType);
     }
 
