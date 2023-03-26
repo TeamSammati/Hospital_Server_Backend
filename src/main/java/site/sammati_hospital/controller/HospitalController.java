@@ -83,10 +83,10 @@ public class HospitalController {
     }
 
 
-    @GetMapping("/send_records/{pid}/{reqType}")
-    public List<RecPreDto2> sendRecords(@PathVariable("pid") Integer patientId, @PathVariable("reqType")Integer reqType){
-        return doctorLoginService.findRecordsByPatientId(patientId,reqType);
-    }
+//    @GetMapping("/send_records/{pid}/{reqType}")
+//    public List<RecPreDto2> sendRecords(@PathVariable("pid") Integer patientId, @PathVariable("reqType")Integer reqType){
+//        return doctorLoginService.findRecordsByPatientId(patientId,reqType);
+//    }
 
     @GetMapping("/patient_existIn_hospital")
     public Boolean checkPatientExistInHospital(@RequestParam("patientId") Integer patientId ) {
