@@ -39,7 +39,8 @@ public class Doctor implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToMany(mappedBy = "doctor")
+    @OneToMany(mappedBy = "doctor",fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Token> tokens;
 
     @Override

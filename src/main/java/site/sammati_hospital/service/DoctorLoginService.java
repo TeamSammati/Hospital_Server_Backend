@@ -20,4 +20,6 @@ public interface DoctorLoginService {
     public void addPrescription(PrescriptionDto prescriptionDto);
 
     List<Prescription> findRecordsByPatientId(Integer patientId, Integer reqType);
+
+    public Doctor findDoctorByEmail(String email);
 }
