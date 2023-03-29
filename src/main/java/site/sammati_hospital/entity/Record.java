@@ -26,7 +26,8 @@ public class Record {
     @JoinColumn(name="doctorId",nullable = false)
     private Doctor doctor;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn(name="visitId",nullable = false)
     private Visit visit;
 
@@ -36,7 +37,6 @@ public class Record {
     @Column(nullable = false)
     private String treatment;
 
-    @OneToMany(mappedBy = "record",fetch = FetchType.LAZY)
-    @JsonIgnore
+    @OneToMany(mappedBy = "record")
     private List<Prescription> prescriptions;
 }

@@ -30,7 +30,6 @@ public class Episode {
     @Column(nullable = false)
     private String episode_type;
 
-    @OneToMany(mappedBy = "episode",fetch = FetchType.LAZY)
-    @JsonIgnore
+    @OneToMany(mappedBy = "episode")
     private List<Visit> visits;
 }

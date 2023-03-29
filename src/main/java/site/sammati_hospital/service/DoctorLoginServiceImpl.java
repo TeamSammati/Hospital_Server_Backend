@@ -111,23 +111,28 @@ public class DoctorLoginServiceImpl implements DoctorLoginService{
 
 
     @Override
-    public List<Prescription> findRecordsByPatientId(Integer patientId, Integer reqType) {
-        List<RecPreDto2> records=new ArrayList<>();
-        List<Prescription> prescriptionsList=new ArrayList<>();
-        if(reqType==0){
-            List<Record> recordList=recordRepository.findAllByPatientId(patientId);
-            for(Record record:recordList){
-                List<Prescription> prescriptions=prescriptionRepository.findAllByRecordId(record.getRecordId());
-                records.add(new RecPreDto2(record,prescriptions));
-                prescriptionsList.addAll(prescriptions);
-            }
-        }
-        return prescriptionsList;
+    public List<Record> findRecordsByPatientId(Integer patientId, Integer reqType) {
+//        List<RecPreDto2> records=new ArrayList<>();
+//        List<Prescription> prescriptionsList=new ArrayList<>();
+//        if(reqType==0){
+//            List<Record> recordList=recordRepository.findAllByPatientId(patientId);
+//            for(Record record:recordList){
+//                List<Prescription> prescriptions=prescriptionRepository.findAllByRecordId(record.getRecordId());
+//                records.add(new RecPreDto2(record,prescriptions));
+//                prescriptionsList.addAll(prescriptions);
+//            }
+//        }
+        return recordRepository.findAllByPatientId(patientId);
     }
 
     @Override
     public Doctor findDoctorByEmail(String email) {
         return hospitalRepository.findByEmail(email).get();
+    }
+
+    @Override
+    public List<Episode> getEpisodes(Integer patientId) {
+        return episodeRepository.findAllByPatientId(patientId);
     }
 
 

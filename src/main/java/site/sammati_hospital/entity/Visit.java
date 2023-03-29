@@ -22,7 +22,8 @@ public class Visit {
     @Column(nullable = false)
     private Integer patientId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn(name="episodeId",nullable = false)
     private Episode episode;
 
