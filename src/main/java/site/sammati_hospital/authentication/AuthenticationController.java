@@ -12,6 +12,7 @@ import site.sammati_hospital.dto.PatientDto;
 import site.sammati_hospital.dto.RecPreDto2;
 import site.sammati_hospital.entity.Doctor;
 import site.sammati_hospital.entity.Prescription;
+import site.sammati_hospital.entity.Record;
 import site.sammati_hospital.service.DoctorLoginService;
 
 import java.util.List;
@@ -65,7 +66,7 @@ public class AuthenticationController
     }
 
     @GetMapping("/send_records/{pid}/{reqType}")
-    public List<Prescription> sendRecords(@PathVariable("pid") Integer patientId, @PathVariable("reqType")Integer reqType){
+    public List<Record> sendRecords(@PathVariable("pid") Integer patientId, @PathVariable("reqType")Integer reqType){
         return doctorLoginService.findRecordsByPatientId(patientId,reqType);
     }
 
