@@ -34,8 +34,7 @@ public class Visit {
     @Column(nullable = false)
     private Date visit_date;
 
-    @OneToMany(mappedBy = "visit",fetch = FetchType.LAZY)
-    @JsonIgnore
+    @OneToMany(mappedBy = "visit")
     private List<Record> records;
 
 }
