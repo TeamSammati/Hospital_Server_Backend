@@ -15,4 +15,5 @@ public class ConsentRequest {
     private Integer doctorId;
     private Integer hospitalId;
     private ConsentRequestStatus consentRequestStatus;
+    private String purpose;
 }
