@@ -1,11 +1,18 @@
 package site.sammati_hospital.authentication;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import site.sammati_hospital.config.JwtService;
+import site.sammati_hospital.dto.DoctorHospitalDto;
+import site.sammati_hospital.dto.PatientDoctorMapping;
 import site.sammati_hospital.dto.PatientDto;
 import site.sammati_hospital.entity.*;
 import site.sammati_hospital.repository.HospitalRepository;
@@ -26,7 +33,7 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    public AuthenticationResponse register(RegisterRequest request) {
+    public AuthenticationResponse register(Doctor request) {
 
         var user = Doctor.builder()
                 .firstName(request.getFirstName())

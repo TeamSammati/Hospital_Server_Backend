@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import site.sammati_hospital.dto.DoctorHospitalDto;
 import site.sammati_hospital.dto.PatientDoctorMapping;
 import site.sammati_hospital.dto.PatientDto;
 import site.sammati_hospital.entity.Doctor;
@@ -28,8 +29,24 @@ public class AuthenticationController
     private final DoctorLoginService doctorLoginService;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
-        return ResponseEntity.ok(service.register(request));
+    public ResponseEntity<AuthenticationResponse> register(@RequestBody Doctor doctor) {
+
+        AuthenticationResponse authenticationResponse= service.register(doctor);
+        Doctor doctor2=doctorLoginService.findDoctorByEmail(doctor.getEmail());
+        authenticationResponse.setDoctor(doctor2);
+        String uri= "http://172.16.131.147:6979/add-doctor-hospital-mapping";
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        DoctorHospitalDto mapping = new DoctorHospitalDto();
+        System.out.println();
+        mapping.setDoctorId(authenticationResponse.getDoctor().getDoctorId());
+        mapping.setDoctorName(authenticationResponse.getDoctor().getFirstName()+" "+authenticationResponse.getDoctor().getLastName());
+        mapping.setHospitalId(1);
+        mapping.setHospitalName("Appolo");
+        HttpEntity<DoctorHospitalDto> request1 = new HttpEntity<DoctorHospitalDto>(mapping, headers);
+        ResponseEntity<Integer> response = restTemplate.postForEntity( uri, request1 , Integer.class);
+        return ResponseEntity.ok(authenticationResponse);
     }
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request
@@ -46,12 +63,12 @@ public class AuthenticationController
     public Integer registerPatient(@RequestBody PatientDto patientDto)
     {
 
-        String uri1 = "http://172.16.131.147:6979/global_patient_id_exist/" + patientDto.getPatientId();
+        String uri1 = "http://172.16.133.184:6979/global_patient_id_exist/" + patientDto.getPatientId();
         RestTemplate restTemplate = new RestTemplate();
         Boolean response1= restTemplate.postForObject(uri1, null, Boolean.class);
         if(response1==false)return Integer.MIN_VALUE;
 
-        String uri2 = "http://172.16.131.147:6979/add_patient_hospital_mapping";
+        String uri2 = "http://172.16.133.184:6979/add_patient_hospital_mapping";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         PatientDoctorMapping mapping = new PatientDoctorMapping();
