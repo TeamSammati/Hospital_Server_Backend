@@ -105,6 +105,14 @@ public class HospitalController {
 
     @GetMapping("/get-episodes")
     public List<Episode> getEpisodes(@RequestParam("patientId") Integer patientId){
-        return doctorLoginService.getEpisodes(patientId);
+        List<Episode> episodes=doctorLoginService.getEpisodes(patientId);
+        for(Episode episode:episodes){
+            List<Visit> visits=episode.getVisits();
+            for(Visit visit:visits){
+                visit.setRecords(null);
+            }
+        }
+    return episodes;
     }
+
 }
