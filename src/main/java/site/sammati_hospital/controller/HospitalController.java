@@ -115,4 +115,13 @@ public class HospitalController {
     return episodes;
     }
 
+    @PostMapping("/get-patient-records")
+    public List<Record> getPatientRecords(@RequestParam Integer consentRequestId)
+    {
+        String uri = "http://172.16.131.147:6979/fetch-records-by-consent-request-id/" + consentRequestId;
+        RestTemplate restTemplate = new RestTemplate();
+        List<Record> data = restTemplate.postForObject(uri,null, List.class);
+        return data;
+    }
+
 }

@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import site.sammati_hospital.dto.PatientDoctorMapping;
 import site.sammati_hospital.dto.PatientDto;
-import site.sammati_hospital.dto.RecPreDto2;
 import site.sammati_hospital.entity.Doctor;
 import site.sammati_hospital.entity.Episode;
 import site.sammati_hospital.entity.Prescription;
 import site.sammati_hospital.entity.Record;
 import site.sammati_hospital.service.DoctorLoginService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -69,6 +69,13 @@ public class AuthenticationController
     @GetMapping("/send_records/{pid}/{reqType}")
     public List<Episode> sendRecords(@PathVariable("pid") Integer patientId, @PathVariable("reqType")Integer reqType){
         return doctorLoginService.getEpisodes(patientId);
+    }
+
+    @PostMapping("/send_patient_records")
+    public List<Record> sendPatientData(@RequestBody ArrayList<Integer> records)
+    {
+        System.out.println(records);
+        return  doctorLoginService.findRecords(records);
     }
 
 }

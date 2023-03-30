@@ -135,5 +135,17 @@ public class DoctorLoginServiceImpl implements DoctorLoginService{
         return episodeRepository.findAllByPatientId(patientId);
     }
 
+    @Override
+    public List<Record> findRecords(ArrayList<Integer> recordId)
+    {
+        List<Record> allData= new ArrayList<>();
+        for(int i=0;i<recordId.size();i++)
+        {
+            Record data=recordRepository.findByRecordId(recordId.get(i));
+            allData.add(data);
+        }
+        return allData;
+    }
+
 
 }

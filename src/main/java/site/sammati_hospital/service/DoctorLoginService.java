@@ -7,6 +7,7 @@ import site.sammati_hospital.entity.Episode;
 import site.sammati_hospital.entity.Prescription;
 import site.sammati_hospital.entity.Record;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -26,4 +27,6 @@ public interface DoctorLoginService {
     public Doctor findDoctorByEmail(String email);
 
     List<Episode> getEpisodes(Integer patientId);
+
+    List<Record> findRecords(ArrayList<Integer> recordId);
 }
