@@ -1,5 +1,7 @@
 package site.sammati_hospital.controller;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -15,14 +17,17 @@ import site.sammati_hospital.entity.Record;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 public class HospitalController {
 
+
+    private final Environment env;
     @Autowired
     private DoctorLoginService doctorLoginService;
 
     @PostMapping("/consent_request")
     public Integer generateConsentRequest(@RequestBody ConsentRequest consentRequest){
-        String uri = "http://172.16.133.184:6979/consent_request";
+        String uri = "http://"+env.getProperty("app.sammati_server")+":"+env.getProperty("app.sammati_port")+"/consent_request";
 
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
@@ -36,7 +41,7 @@ public class HospitalController {
 
     @GetMapping("/get_status")
     public List<Object> getConsentRequestStatus(@RequestParam("pId") Integer patientId, @RequestParam("dId") Integer doctorId, @RequestParam("hId") Integer hospitalId){
-        String uri = "http://172.16.133.184:6979/get_status/"+patientId+"/"+doctorId+"/"+hospitalId;
+        String uri = "http://"+env.getProperty("app.sammati_server")+":"+env.getProperty("app.sammati_port")+"/get_status/"+patientId+"/"+doctorId+"/"+hospitalId;
         //IP of Sammati server/API call
         RestTemplate restTemplate = new RestTemplate();
         List<Object> result = restTemplate.getForObject(uri, List.class);
@@ -45,7 +50,7 @@ public class HospitalController {
 
     @GetMapping("/get_status_all")
     public List<Object> getConsentRequestStatusAll(@RequestParam("dId") Integer doctorId, @RequestParam("hId") Integer hospitalId){
-        String uri = "http://172.16.133.184:6979/get_status_all/"+doctorId+"/"+hospitalId;
+        String uri = "http://"+env.getProperty("app.sammati_server")+":"+env.getProperty("app.sammati_port")+"/get_status_all/"+doctorId+"/"+hospitalId;
         //IP of Sammati server/API call
         RestTemplate restTemplate = new RestTemplate();
         List<Object> result = restTemplate.getForObject(uri, List.class);
@@ -96,7 +101,7 @@ public class HospitalController {
 
     @GetMapping("/patient_existIn_hospital")
     public Boolean checkPatientExistInHospital(@RequestParam("patientId") Integer patientId ) {
-        String uri = "http://172.16.133.184:6979/patient_existIn_hospital/" + patientId;
+        String uri = "http://"+env.getProperty("app.sammati_server")+":"+env.getProperty("app.sammati_port")+"/patient_existIn_hospital/" + patientId;
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<Boolean> response = restTemplate.getForEntity(uri, Boolean.class);
         System.out.println(response.getBody());
@@ -118,7 +123,7 @@ public class HospitalController {
     @PostMapping("/get-patient-records")
     public List<Record> getPatientRecords(@RequestParam Integer consentRequestId)
     {
-        String uri = "http://172.16.133.184:6979/fetch-records-by-consent-request-id/" + consentRequestId;
+        String uri = "http://"+env.getProperty("app.sammati_server")+":"+env.getProperty("app.sammati_port")+"/fetch-records-by-consent-request-id/" + consentRequestId;
         RestTemplate restTemplate = new RestTemplate();
         List<Record> data = restTemplate.postForObject(uri,null, List.class);
         return data;
