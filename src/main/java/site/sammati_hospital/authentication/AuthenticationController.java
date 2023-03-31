@@ -1,6 +1,7 @@
 package site.sammati_hospital.authentication;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -24,7 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AuthenticationController
 {
-
+    private final Environment env;
     private final AuthenticationService service;
     private final DoctorLoginService doctorLoginService;
 
@@ -34,7 +35,7 @@ public class AuthenticationController
         AuthenticationResponse authenticationResponse= service.register(doctor);
         Doctor doctor2=doctorLoginService.findDoctorByEmail(doctor.getEmail());
         authenticationResponse.setDoctor(doctor2);
-        String uri= "http://172.16.131.147:6979/add-doctor-hospital-mapping";
+        String uri= "http://"+env.getProperty("app.sammati_server")+":"+env.getProperty("app.sammati_port")+"/add-doctor-hospital-mapping";
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -42,8 +43,8 @@ public class AuthenticationController
         System.out.println();
         mapping.setDoctorId(authenticationResponse.getDoctor().getDoctorId());
         mapping.setDoctorName(authenticationResponse.getDoctor().getFirstName()+" "+authenticationResponse.getDoctor().getLastName());
-        mapping.setHospitalId(1);
-        mapping.setHospitalName("Appolo");
+        mapping.setHospitalId(Integer.valueOf(env.getProperty("app.hospital_id")));
+        mapping.setHospitalName(env.getProperty("app.hospital_name"));
         HttpEntity<DoctorHospitalDto> request1 = new HttpEntity<DoctorHospitalDto>(mapping, headers);
         ResponseEntity<Integer> response = restTemplate.postForEntity( uri, request1 , Integer.class);
         return ResponseEntity.ok(authenticationResponse);
@@ -63,12 +64,12 @@ public class AuthenticationController
     public Integer registerPatient(@RequestBody PatientDto patientDto)
     {
 
-        String uri1 = "http://172.16.133.184:6979/global_patient_id_exist/" + patientDto.getPatientId();
+        String uri1 = "http://"+env.getProperty("app.sammati_server")+":"+env.getProperty("app.sammati_port")+"/global_patient_id_exist/" + patientDto.getPatientId();
         RestTemplate restTemplate = new RestTemplate();
         Boolean response1= restTemplate.postForObject(uri1, null, Boolean.class);
         if(response1==false)return Integer.MIN_VALUE;
 
-        String uri2 = "http://172.16.133.184:6979/add_patient_hospital_mapping";
+        String uri2 ="http://"+env.getProperty("app.sammati_server")+":"+env.getProperty("app.sammati_port")+"/add_patient_hospital_mapping";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         PatientDoctorMapping mapping = new PatientDoctorMapping();
