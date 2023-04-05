@@ -1,4 +1,5 @@
 package site.sammati_hospital.controller;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -128,5 +129,9 @@ public class HospitalController {
         List<Record> data = restTemplate.postForObject(uri,null, List.class);
         return data;
     }
+
+
+
+
 
 }

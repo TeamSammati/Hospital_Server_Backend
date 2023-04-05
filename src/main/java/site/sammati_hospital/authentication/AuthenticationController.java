@@ -11,9 +11,8 @@ import org.springframework.web.client.RestTemplate;
 import site.sammati_hospital.dto.DoctorHospitalDto;
 import site.sammati_hospital.dto.PatientDoctorMapping;
 import site.sammati_hospital.dto.PatientDto;
-import site.sammati_hospital.entity.Doctor;
-import site.sammati_hospital.entity.Episode;
-import site.sammati_hospital.entity.Prescription;
+import site.sammati_hospital.dto.PatientOtpDto;
+import site.sammati_hospital.entity.*;
 import site.sammati_hospital.entity.Record;
 import site.sammati_hospital.service.DoctorLoginService;
 
@@ -61,27 +60,15 @@ public class AuthenticationController
     }
 
     @PostMapping("/register_new_patient")
-    public Integer registerPatient(@RequestBody PatientDto patientDto)
+    public Integer registerPatient(@RequestBody PatientDto patientDto,@RequestParam Integer hospitalId)
     {
-
-        String uri1 = "http://"+env.getProperty("app.sammati_server")+":"+env.getProperty("app.sammati_port")+"/global_patient_id_exist/" + patientDto.getPatientId();
+        System.out.println("In hospital");
+        //add patient data into hospital
+        Integer pid=service.registerPatient(patientDto);
+        String uri="http://"+env.getProperty("app.sammati_server")+":"+env.getProperty("app.sammati_port")+"/change-patient-hospital-mapping/"+patientDto.getPatientId()+"/"+hospitalId;
         RestTemplate restTemplate = new RestTemplate();
-        Boolean response1= restTemplate.postForObject(uri1, null, Boolean.class);
-        if(response1==false)return Integer.MIN_VALUE;
-
-        String uri2 ="http://"+env.getProperty("app.sammati_server")+":"+env.getProperty("app.sammati_port")+"/add_patient_hospital_mapping";
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        PatientDoctorMapping mapping = new PatientDoctorMapping();
-        mapping.setPatientId(patientDto.getPatientId());
-        mapping.setHospitalId(10);
-        HttpEntity<PatientDoctorMapping> request = new HttpEntity<PatientDoctorMapping>(mapping, headers);
-        ResponseEntity<Integer> response2 = restTemplate.postForEntity( uri2, request , Integer.class);
-        if(response2.getBody()!=Integer.MAX_VALUE)
-        {
-            System.out.println("Mapping save successfully");
-        }
-        return service.registerPatient(patientDto);
+        restTemplate.postForObject(uri,null,void.class);
+        return pid;
     }
 
     @GetMapping("/send_records/{pid}/{reqType}")
@@ -95,5 +82,29 @@ public class AuthenticationController
         System.out.println(records);
         return  doctorLoginService.findRecords(records);
     }
+
+    @GetMapping("/get-patient-data")
+    public PatientDto getPatientData(@RequestBody PatientOtpDto patientOtpDto)
+    {
+        System.out.println("in hospital");
+        String uri = "http://"+env.getProperty("app.sammati_server")+":"+env.getProperty("app.sammati_port")+"/get-patient-data-by-patientId";
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<PatientOtpDto> request = new HttpEntity<PatientOtpDto>(patientOtpDto, headers);
+        PatientDto patientDto= restTemplate.postForObject(uri,request,PatientDto.class);
+        System.out.println(patientDto);
+        return patientDto;
+    }
+
+    @PostMapping("/send-otp-patient")
+    public Boolean sendOtp(@RequestParam Integer patientId)
+    {
+        String uri = "http://"+env.getProperty("app.sammati_server")+":"+env.getProperty("app.sammati_port")+"/generate-otp/" +patientId;
+        RestTemplate restTemplate = new RestTemplate();
+        boolean result=restTemplate.postForObject(uri,null,boolean.class);
+        return result;
+    }
+
 
 }

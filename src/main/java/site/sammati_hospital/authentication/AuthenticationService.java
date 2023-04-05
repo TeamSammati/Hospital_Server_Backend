@@ -101,17 +101,14 @@ public class AuthenticationService {
                 .lastName(patientDto.getLastName())
                 .phoneNumber(patientDto.getPhoneNumber())
                 .gender(patientDto.getGender())
-                .UID_Number(patientDto.getUID_Number())
-                .UID_type(patientDto.getUID_type())
+                .UID_Number(patientDto.getUidNumber())
+                .UID_type(patientDto.getUidType())
                 .email(patientDto.getEmail())
                 .DOB(patientDto.getDOB())
                 .state(patientDto.getState())
                 .address(patientDto.getAddress())
                 .pinCode(patientDto.getPinCode())
                 .passPhoto(patientDto.getPassPhoto())
-                .weight(patientDto.getWeight())
-                .age(patientDto.getAge())
-                .bloodGroup(patientDto.getBloodGroup())
                 .build();
         patientRepository.save(patient);
         return patient.getPatientId();

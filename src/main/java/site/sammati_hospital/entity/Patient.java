@@ -47,15 +47,8 @@ public class Patient
 
     private String pinCode;
 
+    @Column(columnDefinition = "MEDIUMTEXT")
     private String passPhoto;
-
-    @Column(nullable = false)
-    private float weight;
-
-    @Column(nullable = false)
-    private Integer age;
-
-    private String bloodGroup;
 
 
 }
