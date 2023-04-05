@@ -59,18 +59,6 @@ public class AuthenticationController
         return ResponseEntity.ok(authenticationResponse);
     }
 
-    @PostMapping("/register_new_patient")
-    public Integer registerPatient(@RequestBody PatientDto patientDto,@RequestParam Integer hospitalId)
-    {
-        System.out.println("In hospital");
-        //add patient data into hospital
-        Integer pid=service.registerPatient(patientDto);
-        String uri="http://"+env.getProperty("app.sammati_server")+":"+env.getProperty("app.sammati_port")+"/change-patient-hospital-mapping/"+patientDto.getPatientId()+"/"+hospitalId;
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.postForObject(uri,null,void.class);
-        return pid;
-    }
-
     @GetMapping("/send_records/{pid}/{reqType}")
     public List<Episode> sendRecords(@PathVariable("pid") Integer patientId, @PathVariable("reqType")Integer reqType){
         return doctorLoginService.getEpisodes(patientId);
@@ -83,28 +71,7 @@ public class AuthenticationController
         return  doctorLoginService.findRecords(records);
     }
 
-    @GetMapping("/get-patient-data")
-    public PatientDto getPatientData(@RequestBody PatientOtpDto patientOtpDto)
-    {
-        System.out.println("in hospital");
-        String uri = "http://"+env.getProperty("app.sammati_server")+":"+env.getProperty("app.sammati_port")+"/get-patient-data-by-patientId";
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<PatientOtpDto> request = new HttpEntity<PatientOtpDto>(patientOtpDto, headers);
-        PatientDto patientDto= restTemplate.postForObject(uri,request,PatientDto.class);
-        System.out.println(patientDto);
-        return patientDto;
-    }
 
-    @PostMapping("/send-otp-patient")
-    public Boolean sendOtp(@RequestParam Integer patientId)
-    {
-        String uri = "http://"+env.getProperty("app.sammati_server")+":"+env.getProperty("app.sammati_port")+"/generate-otp/" +patientId;
-        RestTemplate restTemplate = new RestTemplate();
-        boolean result=restTemplate.postForObject(uri,null,boolean.class);
-        return result;
-    }
 
 
 }

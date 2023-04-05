@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import site.sammati_hospital.authentication.AuthenticationService;
 import site.sammati_hospital.entity.*;
 import site.sammati_hospital.service.DoctorLoginService;
 import site.sammati_hospital.dto.*;
@@ -23,6 +24,7 @@ public class HospitalController {
 
 
     private final Environment env;
+    private final AuthenticationService service;
     @Autowired
     private DoctorLoginService doctorLoginService;
 
@@ -128,6 +130,39 @@ public class HospitalController {
         RestTemplate restTemplate = new RestTemplate();
         List<Record> data = restTemplate.postForObject(uri,null, List.class);
         return data;
+    }
+
+    @PostMapping("/get-patient-data")
+    public PatientDto getPatientData(@RequestBody PatientOtpDto patientOtpDto)
+    {
+        String uri = "http://"+env.getProperty("app.sammati_server")+":"+env.getProperty("app.sammati_port")+"/get-patient-data-by-patientId";
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<PatientOtpDto> request = new HttpEntity<PatientOtpDto>(patientOtpDto, headers);
+        PatientDto patientDto= restTemplate.postForObject(uri,request,PatientDto.class);
+        System.out.println(patientDto);
+        return patientDto;
+    }
+
+    @PostMapping("/send-otp-patient")
+    public Boolean sendOtp(@RequestParam Integer patientId)
+    {
+        String uri = "http://"+env.getProperty("app.sammati_server")+":"+env.getProperty("app.sammati_port")+"/generate-otp/" +patientId;
+        RestTemplate restTemplate = new RestTemplate();
+        boolean result=restTemplate.postForObject(uri,null,boolean.class);
+        return result;
+    }
+
+    @PostMapping("/register_new_patient")
+    public Integer registerPatient(@RequestBody PatientDto patientDto,@RequestParam Integer hospitalId)
+    {
+        System.out.println("In hospital");
+        Integer pid=service.registerPatient(patientDto);
+        String uri="http://"+env.getProperty("app.sammati_server")+":"+env.getProperty("app.sammati_port")+"/change-patient-hospital-mapping/"+patientDto.getPatientId()+"/"+hospitalId;
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.postForObject(uri,null,void.class);
+        return pid;
     }
 
 
