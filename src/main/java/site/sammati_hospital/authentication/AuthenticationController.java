@@ -59,12 +59,12 @@ public class AuthenticationController
         return ResponseEntity.ok(authenticationResponse);
     }
 
-    @GetMapping("/send_records/{pid}/{reqType}")
+    @GetMapping("/send-records/{pid}/{reqType}")
     public List<Episode> sendRecords(@PathVariable("pid") Integer patientId, @PathVariable("reqType")Integer reqType){
         return doctorLoginService.getEpisodes(patientId);
     }
 
-    @PostMapping("/send_patient_records")
+    @PostMapping("/send-patient-records")
     public List<Record> sendPatientData(@RequestBody ArrayList<Integer> records)
     {
         System.out.println(records);
