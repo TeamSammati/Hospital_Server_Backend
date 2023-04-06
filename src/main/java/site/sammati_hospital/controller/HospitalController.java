@@ -167,6 +167,13 @@ public class HospitalController {
     }
 
 
+    @GetMapping("/active-consents-doctor")
+    public List<Object> activeConsent(@RequestParam Integer doctorId){
+        String uri = "http://"+env.getProperty("app.sammati_server")+":"+env.getProperty("app.sammati_port")+"/active-consents-doctor?doctorId="+doctorId;
+        RestTemplate restTemplate = new RestTemplate();
+        List<Object> result = restTemplate.getForObject(uri, List.class);
+        return result;
+    }
 
 
 
