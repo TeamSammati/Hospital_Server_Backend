@@ -9,15 +9,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import site.sammati_hospital.dto.DoctorHospitalDto;
-import site.sammati_hospital.dto.PatientDoctorMapping;
-import site.sammati_hospital.dto.PatientDto;
-import site.sammati_hospital.dto.PatientOtpDto;
 import site.sammati_hospital.entity.*;
 import site.sammati_hospital.entity.Record;
 import site.sammati_hospital.service.DoctorLoginService;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static site.sammati_hospital.service.PatientAuthService.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -71,7 +70,21 @@ public class AuthenticationController
         return  doctorLoginService.findRecords(records);
     }
 
+    @GetMapping("/authorize-patient")
+    public String authorizePatient(@RequestParam("patientId") Integer pid) {
+        clearOTPFromCache(pid.toString());
+        String otp = genString(pid.toString());
+        System.out.println(otp);
+        return otp;
+    }
 
-
+    @GetMapping("/validate-patient")
+    public boolean validatePatient(@RequestParam("patientId") Integer pid, @RequestParam("str") String str) {
+        String pto = getStrByPID(pid.toString());
+        if(pto==null)
+            return false;
+//        System.out.println("Jai Sree Ram");
+        return str.equals(pto);
+    }
 
 }
