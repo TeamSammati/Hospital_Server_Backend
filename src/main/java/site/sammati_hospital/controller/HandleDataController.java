@@ -1,27 +1,29 @@
 package site.sammati_hospital.controller;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 
 import static site.sammati_hospital.service.PatientAuthService.*;
 
 @RestController
+@CrossOrigin("*")
 public class HandleDataController {
 
-    @PostMapping("/authorize-patient")
-    public Integer authorizePatient(@RequestParam("patientId") Integer pid) {
+    @GetMapping("/authorize-patient")
+    public String authorizePatient(@RequestParam("patientId") Integer pid) {
         clearOTPFromCache(pid.toString());
-        Integer otp = generateOTP(pid.toString());
+        String otp = genString(pid.toString());
         System.out.println(otp);
         return otp;
     }
 
-    @PostMapping("/validate-patient")
-    public boolean validateOTP(@RequestParam("patientId") Integer pid, @RequestParam("otp") String otp) {
-        String pto = getOPTByKey(pid.toString());
+    @GetMapping("/validate-patient")
+    public boolean validatePatient(@RequestParam("patientId") Integer pid, @RequestParam("str") String str) {
+        String pto = getStrByPID(pid.toString());
         if(pto==null)
             return false;
-        return otp.equals(pto);
+        System.out.println("Jai Sree Ram");
+        return str.equals(pto);
     }
+
 }
