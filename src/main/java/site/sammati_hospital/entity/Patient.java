@@ -36,7 +36,7 @@ public class Patient
 
     private String UID_type;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String email;
 
     private Date DOB;

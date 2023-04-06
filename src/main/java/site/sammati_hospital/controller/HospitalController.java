@@ -28,9 +28,9 @@ public class HospitalController {
     @Autowired
     private DoctorLoginService doctorLoginService;
 
-    @PostMapping("/consent_request")
+    @PostMapping("/add-consent-request")
     public Integer generateConsentRequest(@RequestBody ConsentRequest consentRequest){
-        String uri = "http://"+env.getProperty("app.sammati_server")+":"+env.getProperty("app.sammati_port")+"/consent_request";
+        String uri = "http://"+env.getProperty("app.sammati_server")+":"+env.getProperty("app.sammati_port")+"/add-consent-request";
 
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
@@ -42,18 +42,18 @@ public class HospitalController {
         return response.getBody();
     }
 
-    @GetMapping("/get_status")
+    @GetMapping("/get-status")
     public List<Object> getConsentRequestStatus(@RequestParam("pId") Integer patientId, @RequestParam("dId") Integer doctorId, @RequestParam("hId") Integer hospitalId){
-        String uri = "http://"+env.getProperty("app.sammati_server")+":"+env.getProperty("app.sammati_port")+"/get_status/"+patientId+"/"+doctorId+"/"+hospitalId;
+        String uri = "http://"+env.getProperty("app.sammati_server")+":"+env.getProperty("app.sammati_port")+"/get-status/"+patientId+"/"+doctorId+"/"+hospitalId;
         //IP of Sammati server/API call
         RestTemplate restTemplate = new RestTemplate();
         List<Object> result = restTemplate.getForObject(uri, List.class);
         return result;
     }
 
-    @GetMapping("/get_status_all")
+    @GetMapping("/get-status-all")
     public List<Object> getConsentRequestStatusAll(@RequestParam("dId") Integer doctorId, @RequestParam("hId") Integer hospitalId){
-        String uri = "http://"+env.getProperty("app.sammati_server")+":"+env.getProperty("app.sammati_port")+"/get_status_all/"+doctorId+"/"+hospitalId;
+        String uri = "http://"+env.getProperty("app.sammati_server")+":"+env.getProperty("app.sammati_port")+"/get-status-all/"+doctorId+"/"+hospitalId;
         //IP of Sammati server/API call
         RestTemplate restTemplate = new RestTemplate();
         List<Object> result = restTemplate.getForObject(uri, List.class);
@@ -67,18 +67,18 @@ public class HospitalController {
         return doctor;
     }
 
-    @PostMapping("/addepisode")
+    @PostMapping("/add-episode")
     public Integer addEpisode(@RequestParam("patientId") Integer patientId,@RequestParam("episodetype") String episodeType){
         return doctorLoginService.createEpisode(patientId,episodeType);
     }
 
-    @PostMapping("/addvisit")
+    @PostMapping("/add-visit")
     public Integer addVisit(@RequestParam("patientId") Integer patientId, @RequestParam("episodeId") Integer episodeId,@RequestParam("doctorId") Integer doctorId){
         return doctorLoginService.createVisit(patientId,episodeId,doctorId);
     }
 
 
-    @PostMapping("/addrecord")
+    @PostMapping("/add-record")
     public Integer addRecord(@RequestBody RecPreDto recordDto){
 
 //        System.out.println(record);
@@ -102,9 +102,9 @@ public class HospitalController {
 //        return doctorLoginService.findRecordsByPatientId(patientId,reqType);
 //    }
 
-    @GetMapping("/patient_existIn_hospital")
+    @GetMapping("/patient-exist-in-hospital")
     public Boolean checkPatientExistInHospital(@RequestParam("patientId") Integer patientId ) {
-        String uri = "http://"+env.getProperty("app.sammati_server")+":"+env.getProperty("app.sammati_port")+"/patient_existIn_hospital/" + patientId;
+        String uri = "http://"+env.getProperty("app.sammati_server")+":"+env.getProperty("app.sammati_port")+"/patient-exist-in-hospital/" + patientId;
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<Boolean> response = restTemplate.getForEntity(uri, Boolean.class);
         System.out.println(response.getBody());
@@ -135,7 +135,7 @@ public class HospitalController {
     @PostMapping("/get-patient-data")
     public PatientDto getPatientData(@RequestBody PatientOtpDto patientOtpDto)
     {
-        String uri = "http://"+env.getProperty("app.sammati_server")+":"+env.getProperty("app.sammati_port")+"/get-patient-data-by-patientId";
+        String uri = "http://"+env.getProperty("app.sammati_server")+":"+env.getProperty("app.sammati_port")+"/get-patient-data-by-patient-id";
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -154,7 +154,7 @@ public class HospitalController {
         return result;
     }
 
-    @PostMapping("/register_new_patient")
+    @PostMapping("/register-new-patient")
     public Integer registerPatient(@RequestBody PatientDto patientDto,@RequestParam Integer hospitalId)
     {
         System.out.println("In hospital");
