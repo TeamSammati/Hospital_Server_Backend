@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import site.sammati_hospital.dto.DoctorHospitalDto;
+import site.sammati_hospital.dto.*;
 import site.sammati_hospital.entity.*;
 import site.sammati_hospital.entity.Record;
 import site.sammati_hospital.service.DoctorLoginService;
@@ -68,6 +69,40 @@ public class AuthenticationController
     {
         System.out.println(records);
         return  doctorLoginService.findRecords(records);
+    }
+
+    //whitelist for checking
+    @PostMapping("/get-all-hospital-with-doctors")
+    public List<HospitalDoctorInfoDto> getHospitalDoctorDetails()
+    {
+
+        String uri= "http://"+env.getProperty("app.sammati_server")+":"+env.getProperty("app.sammati_port")+"/hospital-with-doctors";
+        RestTemplate restTemplate = new RestTemplate();
+        List<HospitalDoctorInfoDto> hospitalDoctorInfoDto=restTemplate.postForObject(uri,null, List.class);
+        return hospitalDoctorInfoDto;
+    }
+
+    //whitelist for checking
+    @PostMapping("/delegate")
+    public void delegation(@RequestBody DelegationDto delegationDto)
+    {
+        String uri= "http://"+env.getProperty("app.sammati_server")+":"+env.getProperty("app.sammati_port")+"/add-delegation-mapping";
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<DelegationDto> request = new HttpEntity<DelegationDto>(delegationDto, headers);
+        restTemplate.postForEntity( uri, request , void.class);
+    }
+
+    //whitelist for checking
+    @PostMapping("/get-patient-records")
+    public List<Record> getPatientRecords(@RequestParam("consentId") Integer consentId,@RequestParam("doctorId")Integer doctorId,@RequestParam("hospitalId") Integer hospitalId)
+    {
+        System.out.println("in hospital");
+        String uri = "http://"+env.getProperty("app.sammati_server")+":"+env.getProperty("app.sammati_port")+"/fetch-records-by-consent-id/" + consentId+"/"+doctorId+"/"+hospitalId;
+        RestTemplate restTemplate = new RestTemplate();
+        List<Record> data = restTemplate.postForObject(uri,null, List.class);
+        return data;
     }
 
     @GetMapping("/authorize-patient")

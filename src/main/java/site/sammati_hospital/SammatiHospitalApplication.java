@@ -14,15 +14,15 @@ public class SammatiHospitalApplication {
 		SpringApplication.run(SammatiHospitalApplication.class, args);
 	}
 
-//	@Bean
-//	public WebMvcConfigurer configure() {
-//		return new WebMvcConfigurer() {
-//			@Override
-//			public void addCorsMappings(CorsRegistry reg) {
-//				reg.addMapping("/**").allowedOrigins("*");
-//			}
-//		};
+	@Bean
+	public WebMvcConfigurer configure() {
+		return new WebMvcConfigurer() {
+			@Override
+			public void addCorsMappings(CorsRegistry reg) {
+				reg.addMapping("/**").allowedOrigins("*");
+			}
+		};
 
-//	}
+	}
 
 }
