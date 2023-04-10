@@ -124,14 +124,6 @@ public class HospitalController {
     return episodes;
     }
 
-    @PostMapping("/get-patient-records")
-    public List<Record> getPatientRecords(@RequestParam Integer consentRequestId)
-    {
-        String uri = "http://"+env.getProperty("app.sammati_server")+":"+env.getProperty("app.sammati_port")+"/fetch-records-by-consent-request-id/" + consentRequestId;
-        RestTemplate restTemplate = new RestTemplate();
-        List<Record> data = restTemplate.postForObject(uri,null, List.class);
-        return data;
-    }
 
     @PostMapping("/get-patient-data")
     public PatientDto getPatientData(@RequestBody PatientOtpDto patientOtpDto)
@@ -174,6 +166,8 @@ public class HospitalController {
         List<Object> result = restTemplate.getForObject(uri, List.class);
         return result;
     }
+
+
 
 
 
