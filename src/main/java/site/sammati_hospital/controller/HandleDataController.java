@@ -22,7 +22,6 @@ public class HandleDataController {
         String pto = getStrByPID(pid.toString());
         if(pto==null)
             return false;
-        System.out.println("Jai Sree Ram");
         return str.equals(pto);
     }
 
