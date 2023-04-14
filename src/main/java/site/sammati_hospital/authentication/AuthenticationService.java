@@ -44,7 +44,7 @@ public class AuthenticationService {
                 .designation(request.getDesignation())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.DOCTOR)
+                .role(request.getRole())
                 .build();
         var savedUser = repository.save(user);
         var jwtToken = jwtService.generateToken(user);

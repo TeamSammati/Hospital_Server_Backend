@@ -10,10 +10,10 @@ import site.sammati_hospital.utils.enums.ConsentRequestStatus;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ConsentRequest {
-    private Integer consentRequestId;
-    private Integer patientId;
-    private Integer doctorId;
-    private Integer hospitalId;
-    private ConsentRequestStatus consentRequestStatus;
-    private String purpose;
+        private Integer consentRequestId;
+        private Integer patientId;
+        private Integer doctorId;
+        private Integer hospitalId;
+        private ConsentRequestStatus consentRequestStatus;
+        private String purpose;
 }

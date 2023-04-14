@@ -11,7 +11,6 @@ public class DelegationDto
 {
     private Integer consentId;
     private Integer doctorId;
-    private String  doctorName;
     private Integer hospitalId;
     private Integer duration;
 }
