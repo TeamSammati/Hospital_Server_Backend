@@ -30,5 +30,7 @@ public interface DoctorLoginService {
 
     List<Record> findRecords(ArrayList<Integer> recordId);
 
+    List<Record> findAllRecords(Integer pid);
+
     DoctorDetailsDTO getDoctorDetails(Integer doctorId);
 }

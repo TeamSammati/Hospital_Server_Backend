@@ -147,6 +147,12 @@ public class DoctorLoginServiceImpl implements DoctorLoginService{
         return allData;
     }
 
+    @Override
+    public List<Record> findAllRecords(Integer pid)
+    {
+        List<Record> allData = recordRepository.findAllByPatientId(pid);
+        return allData;
+    }
 
     public DoctorDetailsDTO getDoctorDetails(Integer doctorId){
         Doctor doctor=hospitalRepository.findByDoctorId(doctorId);

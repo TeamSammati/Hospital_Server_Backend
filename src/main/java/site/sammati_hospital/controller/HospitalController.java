@@ -267,4 +267,10 @@ public class HospitalController {
     public DoctorDetailsDTO getDoctorDetails(@RequestParam("doctorId") Integer doctorId){
         return doctorLoginService.getDoctorDetails(doctorId);
     }
+
+    @GetMapping("/send-all-patient-records")
+    public List<Record> sendAllPatientData(@RequestParam Integer patientId)
+    {
+        return  doctorLoginService.findAllRecords(patientId);
+    }
 }
