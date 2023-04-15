@@ -10,8 +10,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import site.sammati_hospital.entity.Role;
 
 @Service
 public class JwtService {
@@ -27,20 +30,22 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+    public String generateToken(UserDetails userDetails,Role role) {
+        return generateToken(new HashMap<>(), userDetails,role);
     }
 
     public String generateToken(
             Map<String, Object> extraClaims,
-            UserDetails userDetails
+            UserDetails userDetails,
+            Role role
     ) {
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
+                .claim("authorities",new SimpleGrantedAuthority(role.name()))
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000L*60*60*24*365))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000*60*60))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }

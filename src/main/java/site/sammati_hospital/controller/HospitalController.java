@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import site.sammati_hospital.authentication.AuthenticationService;
@@ -30,7 +31,9 @@ public class HospitalController {
     private DoctorLoginService doctorLoginService;
 
     @PostMapping("/add-consent-request")
+    @PreAuthorize("hasRole('DOCTOR')")
     public Integer generateConsentRequest(@RequestBody ConsentRequest consentRequest){
+
         String uri = "http://"+env.getProperty("app.sammati_server")+":"+env.getProperty("app.sammati_port")+"/add-consent-request";
 
         RestTemplate restTemplate = new RestTemplate();
@@ -43,16 +46,17 @@ public class HospitalController {
         return response.getBody();
     }
 
-    @GetMapping("/get-status")
-    public List<Object> getConsentRequestStatus(@RequestParam("pId") Integer patientId, @RequestParam("dId") Integer doctorId, @RequestParam("hId") Integer hospitalId){
-        String uri = "http://"+env.getProperty("app.sammati_server")+":"+env.getProperty("app.sammati_port")+"/get-status/"+patientId+"/"+doctorId+"/"+hospitalId;
-        //IP of Sammati server/API call
-        RestTemplate restTemplate = new RestTemplate();
-        List<Object> result = restTemplate.getForObject(uri, List.class);
-        return result;
-    }
+//    @GetMapping("/get-status")
+//    public List<Object> getConsentRequestStatus(@RequestParam("pId") Integer patientId, @RequestParam("dId") Integer doctorId, @RequestParam("hId") Integer hospitalId){
+//        String uri = "http://"+env.getProperty("app.sammati_server")+":"+env.getProperty("app.sammati_port")+"/get-status/"+patientId+"/"+doctorId+"/"+hospitalId;
+//        //IP of Sammati server/API call
+//        RestTemplate restTemplate = new RestTemplate();
+//        List<Object> result = restTemplate.getForObject(uri, List.class);
+//        return result;
+//    }
 
     @GetMapping("/get-status-all")
+    @PreAuthorize("hasRole('DOCTOR')")
     public ResponseEntity<Object> getConsentRequestStatusAll(@RequestParam("dId") Integer doctorId, @RequestParam("hId") Integer hospitalId){
         String uri = "http://"+env.getProperty("app.sammati_server")+":"+env.getProperty("app.sammati_port")+"/get-status-all/"+doctorId+"/"+hospitalId;
         //IP of Sammati server/API call
@@ -73,17 +77,20 @@ public class HospitalController {
 //    }
 
     @PostMapping("/add-episode")
+    @PreAuthorize("hasRole('RECEPTIONIST')")
     public Integer addEpisode(@RequestParam("patientId") Integer patientId,@RequestParam("episodetype") String episodeType){
         return doctorLoginService.createEpisode(patientId,episodeType);
     }
 
     @PostMapping("/add-visit")
+    @PreAuthorize("hasRole('RECEPTIONIST')")
     public Integer addVisit(@RequestParam("patientId") Integer patientId, @RequestParam("episodeId") Integer episodeId,@RequestParam("doctorId") Integer doctorId){
         return doctorLoginService.createVisit(patientId,episodeId,doctorId);
     }
 
 
     @PostMapping("/add-record")
+    @PreAuthorize("hasRole('DOCTOR')")
     public Integer addRecord(@RequestBody RecPreDto recordDto){
 
 //        System.out.println(record);
@@ -108,6 +115,7 @@ public class HospitalController {
 //    }
 
     @GetMapping("/patient-exist-in-hospital")
+    @PreAuthorize("hasRole('SAMMATI')")
     public ResponseEntity<Object> checkPatientExistInHospital(@RequestParam("patientId") Integer patientId ) {
         String uri = "http://"+env.getProperty("app.sammati_server")+":"+env.getProperty("app.sammati_port")+"/patient-exist-in-hospital/" + patientId;
         HttpHeaders headers = new HttpHeaders();
@@ -120,6 +128,7 @@ public class HospitalController {
     }
 
     @GetMapping("/get-episodes")
+    @PreAuthorize("hasRole('RECEPTIONIST')")
     public List<Episode> getEpisodes(@RequestParam("patientId") Integer patientId){
         List<Episode> episodes=doctorLoginService.getEpisodes(patientId);
         for(Episode episode:episodes){
@@ -131,6 +140,7 @@ public class HospitalController {
     return episodes;
     }
     @PostMapping("/get-patient-data")
+    @PreAuthorize("hasRole('RECEPTIONIST')")
     public PatientDto getPatientData(@RequestBody PatientOtpDto patientOtpDto)
     {
         String uri = "http://"+env.getProperty("app.sammati_server")+":"+env.getProperty("app.sammati_port")+"/get-patient-data-by-patient-id";
@@ -145,6 +155,7 @@ public class HospitalController {
     }
 
     @GetMapping("/send-otp-patient")
+    @PreAuthorize("hasRole('RECEPTIONIST')")
     public ResponseEntity<Object> sendOtp(@RequestParam Integer patientId)
     {
         String uri = "http://"+env.getProperty("app.sammati_server")+":"+env.getProperty("app.sammati_port")+"/generate-otp/" +patientId;
@@ -159,6 +170,7 @@ public class HospitalController {
     }
 
     @PostMapping("/register-new-patient")
+    @PreAuthorize("hasRole('RECEPTIONIST')")
     public Integer registerPatient(@RequestBody PatientDto patientDto,@RequestParam Integer hospitalId)
     {
         System.out.println("In hospital");
@@ -178,6 +190,7 @@ public class HospitalController {
 
 
     @GetMapping("/active-consents-doctor")
+    @PreAuthorize("hasRole('DOCTOR')")
     public ResponseEntity<Object> activeConsent(@RequestParam Integer doctorId){
         String uri = "http://"+env.getProperty("app.sammati_server")+":"+env.getProperty("app.sammati_port")+"/active-consents-doctor?doctorId="+doctorId+"&hospitalId="+env.getProperty("app.hospital_id");;
         HttpHeaders headers = new HttpHeaders();
@@ -191,6 +204,7 @@ public class HospitalController {
     }
 
     @GetMapping("/send-records/{pid}/{reqType}")
+    @PreAuthorize("hasRole('SAMMATI')")
     public List<Episode> sendRecords(@PathVariable("pid") Integer patientId, @PathVariable("reqType")Integer reqType){
         return doctorLoginService.getEpisodes(patientId);
     }
@@ -198,6 +212,7 @@ public class HospitalController {
 
 
     @GetMapping("/get-all-hospital-with-doctors")
+    @PreAuthorize("hasRole('DOCTOR')")
     public ResponseEntity<Object> getHospitalDoctorDetails()
     {
 
@@ -213,6 +228,7 @@ public class HospitalController {
 
 
     @PostMapping("/delegate")
+    @PreAuthorize("hasRole('DOCTOR')")
     public Integer delegation(@RequestBody DelegationDto delegationDto)
     {
         String uri= "http://"+env.getProperty("app.sammati_server")+":"+env.getProperty("app.sammati_port")+"/add-delegation-mapping";
@@ -225,6 +241,7 @@ public class HospitalController {
     }
 
     @GetMapping("/get-patient-records")
+    @PreAuthorize("hasRole('DOCTOR')")
     public ResponseEntity<Object> getPatientRecords(@RequestParam("consentId") Integer consentId,@RequestParam("doctorId")Integer doctorId,@RequestParam("hospitalId") Integer hospitalId)
     {
         System.out.println("in hospital");
@@ -239,6 +256,7 @@ public class HospitalController {
     }
 
     @PostMapping("/send-patient-records")
+    @PreAuthorize("hasRole('SAMMATI')")
     public List<Record> sendPatientData(@RequestBody ArrayList<Integer> records)
     {
         System.out.println(records);
