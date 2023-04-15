@@ -179,7 +179,7 @@ public class HospitalController {
 
     @GetMapping("/active-consents-doctor")
     public ResponseEntity<Object> activeConsent(@RequestParam Integer doctorId){
-        String uri = "http://"+env.getProperty("app.sammati_server")+":"+env.getProperty("app.sammati_port")+"/active-consents-doctor?doctorId="+doctorId;
+        String uri = "http://"+env.getProperty("app.sammati_server")+":"+env.getProperty("app.sammati_port")+"/active-consents-doctor?doctorId="+doctorId+"&hospitalId="+env.getProperty("app.hospital_id");;
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("Authorization", "Bearer "+env.getProperty("app.sammati_token"));
