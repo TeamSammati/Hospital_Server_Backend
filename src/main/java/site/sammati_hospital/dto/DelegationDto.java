@@ -12,5 +12,6 @@ public class DelegationDto
     private Integer consentId;
     private Integer doctorId;
     private Integer hospitalId;
-    private Integer duration;
+    private Integer requestingDoctorId;
+    private Integer requestingHospitalId;
 }
