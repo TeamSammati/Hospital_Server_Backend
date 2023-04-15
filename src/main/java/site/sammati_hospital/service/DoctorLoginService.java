@@ -29,4 +29,6 @@ public interface DoctorLoginService {
     List<Episode> getEpisodes(Integer patientId);
 
     List<Record> findRecords(ArrayList<Integer> recordId);
+
+    DoctorDetailsDTO getDoctorDetails(Integer doctorId);
 }

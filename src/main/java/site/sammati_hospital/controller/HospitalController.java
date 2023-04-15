@@ -244,4 +244,9 @@ public class HospitalController {
         System.out.println(records);
         return  doctorLoginService.findRecords(records);
     }
+
+    @GetMapping("/doctor-details")
+    public DoctorDetailsDTO getDoctorDetails(@RequestParam("doctorId") Integer doctorId){
+        return doctorLoginService.getDoctorDetails(doctorId);
+    }
 }

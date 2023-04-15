@@ -148,4 +148,19 @@ public class DoctorLoginServiceImpl implements DoctorLoginService{
     }
 
 
+    public DoctorDetailsDTO getDoctorDetails(Integer doctorId){
+        Doctor doctor=hospitalRepository.findByDoctorId(doctorId);
+        DoctorDetailsDTO doctorDetailsDTO=DoctorDetailsDTO.builder()
+                .lastName(doctor.getLastName())
+                .registrationDate(doctor.getRegistrationDate())
+                .registrationNumber(doctor.getRegistrationNumber())
+                .role(doctor.getRole())
+                .mobileNumber(doctor.getMobileNumber())
+                .firstName(doctor.getFirstName())
+                .doctorId(doctor.getDoctorId())
+                .designation(doctor.getDesignation())
+                .email(doctor.getEmail())
+                .build();
+        return doctorDetailsDTO;
+    }
 }
