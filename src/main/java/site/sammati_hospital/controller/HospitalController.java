@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import site.sammati_hospital.authentication.AuthenticationService;
 import site.sammati_hospital.entity.*;
+import site.sammati_hospital.repository.EmergencyCRRepository;
 import site.sammati_hospital.service.DoctorLoginService;
 import site.sammati_hospital.dto.*;
 import site.sammati_hospital.utils.enums.ReqType;
@@ -29,6 +30,8 @@ public class HospitalController {
     private final AuthenticationService service;
     @Autowired
     private DoctorLoginService doctorLoginService;
+
+    private final EmergencyCRRepository emergencyCRRepository;
 
     @PostMapping("/add-consent-request")
     @PreAuthorize("hasAuthority('DOCTOR')")
@@ -67,6 +70,12 @@ public class HospitalController {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<Object> result = restTemplate.exchange(uri, HttpMethod.GET, requestEntity, Object.class);
         return result;
+    }
+
+    @GetMapping("/get-pending-emergency-cr")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public List<EmergencyConsentRequest> getPendingEmergencyConsentRequest(){
+        return emergencyCRRepository.findAllPendingRequests();
     }
 
 //    @PostMapping("/login")
