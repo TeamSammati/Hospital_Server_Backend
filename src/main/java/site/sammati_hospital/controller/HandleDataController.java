@@ -11,7 +11,7 @@ import static site.sammati_hospital.service.PatientAuthService.*;
 public class HandleDataController {
 
     @GetMapping("/authorize-patient")
-    @PreAuthorize("hasRole('SAMMATI')")
+    @PreAuthorize("hasAuthority('SAMMATI')")
     public String authorizePatient(@RequestParam("patientId") Integer pid) {
         clearOTPFromCache(pid.toString());
         String otp = genString(pid.toString());
@@ -20,7 +20,7 @@ public class HandleDataController {
     }
 
     @GetMapping("/validate-patient")
-    @PreAuthorize("hasRole('SAMMATI')")
+    @PreAuthorize("hasAuthority('SAMMATI')")
     public boolean validatePatient(@RequestParam("patientId") Integer pid, @RequestParam("str") String str) {
         String pto = getStrByPID(pid.toString());
         if(pto==null)
