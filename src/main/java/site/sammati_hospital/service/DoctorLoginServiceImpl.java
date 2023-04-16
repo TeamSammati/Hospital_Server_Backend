@@ -80,6 +80,11 @@ public class DoctorLoginServiceImpl implements DoctorLoginService{
 
         Visit visit=visitRepository.findByVisitId(recordDto.getVisitId());
         Doctor doctor=hospitalRepository.findByDoctorId(recordDto.getDoctorId());
+//System.out.println(visit.getDoctor().getDoctorId()+" "+doctor.getDoctorId());
+        if(visit.getDoctor().getDoctorId() != doctor.getDoctorId()){
+//            System.out.println("in");
+            return -99;
+        }
 
         Record record1= Record.builder()
                 .patientId(recordDto.getPatientId())
