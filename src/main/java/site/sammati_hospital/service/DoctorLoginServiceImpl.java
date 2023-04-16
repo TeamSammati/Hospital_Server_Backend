@@ -7,6 +7,7 @@ import site.sammati_hospital.dto.*;
 import site.sammati_hospital.entity.*;
 import site.sammati_hospital.entity.Record;
 import site.sammati_hospital.repository.*;
+import site.sammati_hospital.utils.enums.ConsentRequestStatus;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -173,5 +174,23 @@ public class DoctorLoginServiceImpl implements DoctorLoginService{
                 .email(doctor.getEmail())
                 .build();
         return doctorDetailsDTO;
+    }
+
+    @Autowired
+    private EmergencyCRRepository emergencyCRRepository;
+    @Override
+    public EmergencyConsentRequest addEmergencyCR(EmergencyConsentRequest emergencyConsentRequest) {
+        emergencyConsentRequest.setConsentRequestStatus(ConsentRequestStatus.PENDING);
+        return emergencyCRRepository.save(emergencyConsentRequest);
+    }
+
+    @Override
+    public Integer acceptEmergencyCR(Integer emergencyConsentRequestId,ConsentRequestStatus consentRequestStatus) {
+        return emergencyCRRepository.updateStatus(emergencyConsentRequestId,consentRequestStatus);
+    }
+
+    @Override
+    public EmergencyConsentRequest getEmergencyCRbyId(Integer emergencyConsentRequestId) {
+        return emergencyCRRepository.findByEmergencyConsentRequestId(emergencyConsentRequestId);
     }
 }

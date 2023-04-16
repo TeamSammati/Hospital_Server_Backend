@@ -1,4 +1,5 @@
 package site.sammati_hospital.controller;
+import io.jsonwebtoken.Header;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +11,10 @@ import org.springframework.web.client.RestTemplate;
 import site.sammati_hospital.authentication.AuthenticationService;
 import site.sammati_hospital.entity.*;
 import site.sammati_hospital.repository.EmergencyCRRepository;
+import site.sammati_hospital.repository.PatientRepository;
 import site.sammati_hospital.service.DoctorLoginService;
 import site.sammati_hospital.dto.*;
+import site.sammati_hospital.utils.enums.ConsentRequestStatus;
 import site.sammati_hospital.utils.enums.ReqType;
 import site.sammati_hospital.entity.Record;
 
@@ -32,6 +35,8 @@ public class HospitalController {
     private DoctorLoginService doctorLoginService;
 
     private final EmergencyCRRepository emergencyCRRepository;
+    @Autowired
+    private PatientRepository patientRepository;
 
     @PostMapping("/add-consent-request")
     @PreAuthorize("hasAuthority('DOCTOR')")
@@ -285,4 +290,49 @@ public class HospitalController {
     {
         return  doctorLoginService.findAllRecords(patientId);
     }
+
+    @PostMapping("/add-emergency-consent-request")
+    @PreAuthorize("hasAuthority('DOCTOR')")
+    public ResponseEntity<Object> addEmergencyCR(@RequestBody EmergencyConsentRequest emergencyConsentRequest){
+        return new ResponseEntity<>(doctorLoginService.addEmergencyCR(emergencyConsentRequest),HttpStatus.OK);
+    }
+
+    @PostMapping("/accept-emergency-consent")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<Object> acceptEmergencyCR(@RequestParam Integer emergencyConsentRequestId,
+                                                    @RequestParam ConsentRequestStatus consentRequestStatus,
+                                                    @RequestParam Integer authId){
+
+        if(consentRequestStatus==ConsentRequestStatus.REJECTED){
+            return new ResponseEntity<>(doctorLoginService.acceptEmergencyCR(emergencyConsentRequestId, ConsentRequestStatus.REJECTED), HttpStatus.OK);
+        }else {
+
+            EmergencyConsentRequest emergencyConsentRequest = doctorLoginService.getEmergencyCRbyId(emergencyConsentRequestId);
+            Patient patient=patientRepository.findByPatientId(emergencyConsentRequest.getPatientId());
+            PatientDto patientDto;
+            if(patient==null) {
+                String uri = "http://" + env.getProperty("app.sammati_server") + ":" + env.getProperty("app.sammati_port") + "/get-emergency-patient-data-by-patient-id?patientId=" + emergencyConsentRequest.getPatientId() + "&hospitalId=" + emergencyConsentRequest.getHospitalId();
+                RestTemplate restTemplate = new RestTemplate();
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.APPLICATION_JSON);
+                headers.set("Authorization", "Bearer " + env.getProperty("app.sammati_token"));
+                HttpEntity<Void> request = new HttpEntity<>(headers);
+                patientDto = restTemplate.postForEntity(uri, request, PatientDto.class).getBody();
+                Integer pid = service.registerPatient(patientDto);
+            }
+            String uri2 = "http://" + env.getProperty("app.sammati_server") + ":" + env.getProperty("app.sammati_port") + "/grant-emergency-consent?pId="
+                    + emergencyConsentRequest.getPatientId() + "&dId=" +
+                    emergencyConsentRequest.getDoctorId() + "&hId=" +
+                    emergencyConsentRequest.getHospitalId() + "&authId=" + authId +
+                    "&phone=" + patientRepository.getPhoneNumber(emergencyConsentRequest.getPatientId());
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders headers2 = new HttpHeaders();
+            headers2.setContentType(MediaType.APPLICATION_JSON);
+            headers2.set("Authorization", "Bearer " + env.getProperty("app.sammati_token"));
+            HttpEntity request2 = new HttpEntity<>(headers2);
+            restTemplate.postForEntity(uri2, request2, Integer.class);
+
+            return new ResponseEntity<>(doctorLoginService.acceptEmergencyCR(emergencyConsentRequestId, consentRequestStatus), HttpStatus.OK);
+        }
+        }
 }

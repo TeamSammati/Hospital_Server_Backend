@@ -14,4 +14,7 @@ public interface PatientRepository extends JpaRepository<Patient,Integer>
     String getPhoneByPid(Integer patientId);
 
     Patient findByPatientId(Integer patientId);
+
+    @Query("select p.phoneNumber from Patient p where p.patientId=?1")
+    String getPhoneNumber(Integer patientId);
 }

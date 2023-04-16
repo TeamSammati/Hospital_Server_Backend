@@ -2,10 +2,10 @@ package site.sammati_hospital.service;
 
 import org.springframework.stereotype.Component;
 import site.sammati_hospital.dto.*;
-import site.sammati_hospital.entity.Doctor;
-import site.sammati_hospital.entity.Episode;
-import site.sammati_hospital.entity.Prescription;
+import site.sammati_hospital.entity.*;
 import site.sammati_hospital.entity.Record;
+import site.sammati_hospital.repository.EmergencyCRRepository;
+import site.sammati_hospital.utils.enums.ConsentRequestStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,4 +33,10 @@ public interface DoctorLoginService {
     List<Record> findAllRecords(Integer pid);
 
     DoctorDetailsDTO getDoctorDetails(Integer doctorId);
+
+    EmergencyConsentRequest addEmergencyCR(EmergencyConsentRequest emergencyConsentRequest);
+
+    Integer acceptEmergencyCR(Integer emergencyConsentRequestId, ConsentRequestStatus consentRequestStatus);
+
+    EmergencyConsentRequest getEmergencyCRbyId(Integer emergencyConsentRequestId);
 }

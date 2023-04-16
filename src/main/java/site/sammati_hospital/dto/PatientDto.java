@@ -16,14 +16,8 @@ public class PatientDto
     private String LastName;
     private String phoneNumber;
     private String gender;
-    private String uidNumber;
-    private String uidType;
-    private String email;
-    private String password;
     private Date DOB;
-    private Date registrationDate;
     private String state;
-    private String userName;
     private String address;
     private String pinCode;
     private String passPhoto;
