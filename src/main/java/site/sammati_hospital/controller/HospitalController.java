@@ -93,9 +93,10 @@ public class HospitalController {
     @PreAuthorize("hasRole('DOCTOR')")
     public Integer addRecord(@RequestBody RecPreDto recordDto){
 
-//        System.out.println(record);
+//        System.out.println(recordDto);
 
         Integer recordId= doctorLoginService.addRecord(recordDto.getRecordDto());
+        if(recordId==-99)return -99;
         for (PrescriptionDto prescriptionDto:recordDto.getPrescriptionDtos()) {
             prescriptionDto.setRecordId(recordId);
             doctorLoginService.addPrescription(prescriptionDto);
