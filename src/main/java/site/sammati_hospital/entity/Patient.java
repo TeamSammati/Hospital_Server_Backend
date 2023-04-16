@@ -31,14 +31,6 @@ public class Patient
     @Column(nullable = false)
     private String gender;
 
-    @Column(unique = true)
-    private String UID_Number;
-
-    private String UID_type;
-
-    @Column(nullable = false)
-    private String email;
-
     private Date DOB;
 
     private String state;
